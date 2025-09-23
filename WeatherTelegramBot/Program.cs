@@ -47,47 +47,13 @@ namespace WeatherTelegramBot
 
 
 
-            //using var scope = app.Services.CreateScope();
-
-            //var httpClientFactory = scope.ServiceProvider.GetService<IHttpClientFactory>();
-
-
-            const string API_KEY = "5d539df439fbce04ed7bfa0a2516e38f";
-            const string URLpart1 = "https://api.openweathermap.org/data/2.5/weather?q=";
-            const string URLpart2 = "&appid=";
+           
 
             app.MapGet("api/v1/weather/{city}", async (string cityName, IMapper mapper, IWeatherService weatherService) =>
             {
                 var weatherModel = await weatherService.GetWeatherAsync(cityName, mapper);
                 if (weatherModel == null) return Results.Problem("Ошибка");
                 return Results.Ok(weatherModel);
-
-                //string url = $"{URLpart1}{city}{URLpart2}{API_KEY}";
-               
-
-                //using var client = httpClientFactory.CreateClient();
-
-
-                //try
-                //{
-                //    var response = await client.GetAsync(url);
-
-                //    if (!response.IsSuccessStatusCode)
-                //    {
-                //        return Results.Problem($"Ошибка Api: {response.StatusCode}");
-                //    }
-
-                //    var json = await response.Content.ReadAsStringAsync();
-                //    var modelDto = JsonSerializer.Deserialize<CreateWeatherDto>(json);
-                //    var model = mapper.Map<WeatherModel>(modelDto);
-                //    return Results.Ok(model);
-
-
-                //}
-                //catch (Exception ex)
-                //{
-                //    return Results.Problem($"Ошибка: {ex.Message}");
-                //}
             });
 
             HostBot bot = new HostBot("8019909456:AAFXV9Z4-FQXuqCb3djqQk6Djf4DlNs6IeI");
@@ -139,27 +105,29 @@ namespace WeatherTelegramBot
 
         }
 
-        private static async Task<string> GetWeatherForCity(string cityName, IMapper? mapper)
+        private static async Task<string> GetWeatherForCity(string cityName, IMapper? mapper, IWeatherService weatherService)
         {
             try
             {
-                using var client = new HttpClient();
-                var response = await client.GetAsync($"https://localhost:7067/api/v1/weather/{cityName}");
+                //using var client = new HttpClient();
+                //var response = await client.GetAsync($"https://localhost:7067/api/v1/weather/{cityName}");
 
 
-                if (!response.IsSuccessStatusCode)//здесь получается false
-                {
-                    return $"❌ Город '{cityName}' не найден или ошибка сервиса";
+                //if (!response.IsSuccessStatusCode)//здесь получается false
+                //{
+                //    return $"❌ Город '{cityName}' не найден или ошибка сервиса";
 
-                }
+                //}
 
-                var json = await response.Content.ReadAsStringAsync();
-                var weatherDataDto = JsonSerializer.Deserialize<CreateWeatherDto>(json, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+                //var json = await response.Content.ReadAsStringAsync();
+                //var weatherDataDto = JsonSerializer.Deserialize<CreateWeatherDto>(json, new JsonSerializerOptions
+                //{
+                //    PropertyNameCaseInsensitive = true
+                //});
+                //using var scope = 
+                var weatherData =  await weatherService.GetWeatherAsync(cityName,mapper);
+                var weatherDataModel =weatherData;
 
-                var weatherDataModel = mapper?.Map<WeatherModel>(weatherDataDto);
 
                 if (weatherDataModel == null)
                 {
