@@ -25,7 +25,7 @@ namespace WeatherTelegramBot.Services.WeatherTelegramServices
                 var weatherData = await _weatherService.GetWeatherAsync(cityName, _mapper);
                 if (weatherData == null)
                     return $"❌ Не удалось получить данные для города '{cityName}'";
-                _weatherRepo.
+                _weatherRepo.CreateModel(cityName.ToLower(), weatherData);
 
 
                 return $"🌤️ Погода в {weatherData.City}:\n\n" +

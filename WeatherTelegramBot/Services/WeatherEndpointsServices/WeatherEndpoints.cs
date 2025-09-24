@@ -34,7 +34,7 @@ namespace WeatherTelegramBot.Services.WeatherEndpointsServices
 
                 if (weatherModel == null) return Results.NotFound($"Погода для города '{cityName}' не найдена");
 
-                await weatherRepo.CreateWetherModelAsync(weatherModel);
+                await weatherRepo.CreateModel(cityName.ToLower(),weatherModel);
 
 
 

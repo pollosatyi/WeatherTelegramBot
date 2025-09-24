@@ -24,7 +24,7 @@ namespace WeatherTelegramBot.Data
 
         public async Task<IResult> DeleteWeatherModelAsync(string cityName)
         {
-            var weatherModel = await GetWeatherModelAsync( cityName);
+            var weatherModel = await GetWeatherModelAsync( cityName.ToLower());
             if (weatherModel != null)
             {
                  _context.WeatherModels.Remove(weatherModel);
