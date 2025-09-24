@@ -65,12 +65,17 @@ namespace WeatherTelegramBot
 
             app.MapWeatherEndPoints();
 
+            // Program.cs - в самом конце, перед app.Run()
+            var scope = app.Services.CreateScope(); // БЕЗ using!
+            var botService = scope.ServiceProvider.GetRequiredService<TelegramBotbackGroundService>();
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var botService = scope.ServiceProvider.GetRequiredService<TelegramBotbackGroundService>();
-                _ = Task.Run(() => botService.StartAsync(default)); // Если есть свой метод запуска
-            }
+            // Запускаем сервис и ждем завершения приложения
+            var botTask = botService.StartAsync(app.Services.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping);
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var botService = scope.ServiceProvider.GetRequiredService<TelegramBotbackGroundService>();
+            //    _ = Task.Run(() => botService.StartAsync(default)); // Если есть свой метод запуска
+            //}
 
             app.Run();
         }

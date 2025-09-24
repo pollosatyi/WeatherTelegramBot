@@ -15,11 +15,11 @@ namespace WeatherTelegramBot.Data
             _context = dbContext;
             _mapper = mapper;
         }
-        public async Task CreateWetherModelAsync(WeatherModel weatherModel)
+        public async Task<IResult> CreateWetherModelAsync(WeatherModel weatherModel)
         {
             await _context.WeatherModels.AddAsync(weatherModel);
             await SaveChanges();
-
+            return Results.Ok(_mapper.Map<ReadModelDto>(weatherModel));
         }
 
         public async Task<IResult> DeleteWeatherModelAsync(string cityName)
@@ -71,6 +71,19 @@ namespace WeatherTelegramBot.Data
             {
                 return Results.Problem(ex.Message);
 
+            }
+        }
+
+        public async Task<IResult> CreateModel(string cityName, WeatherModel weatherModel)
+        {
+            var findCityFromDb = await GetWeatherModelAsync(cityName.ToLower());
+            if (findCityFromDb == null)
+            {
+                return await CreateWetherModelAsync(weatherModel);
+            }
+            else
+            {
+                return await UpdateWeatherModelAsync(weatherModel, findCityFromDb);
             }
         }
 

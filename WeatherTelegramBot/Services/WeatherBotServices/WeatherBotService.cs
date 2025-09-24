@@ -22,6 +22,7 @@ namespace WeatherTelegramBot.Services.WeatherTelegramServices
                 if (weatherData == null)
                     return $"❌ Не удалось получить данные для города '{cityName}'";
 
+
                 return $"🌤️ Погода в {weatherData.City}:\n\n" +
                        $"🌡️ Температура: {weatherData.Temperature}K\n" +
                        $"📝 Описание: {weatherData.Description}\n" +
