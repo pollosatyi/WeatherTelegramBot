@@ -7,8 +7,8 @@ namespace WeatherTelegramBot.Data
     {
         Task SaveChanges();
         Task<WeatherModel?> GetWeatherModelAsync(string cityName);
-
-        Task CreateWetherModelAsync(WeatherModel weatherModel);
+        Task<IResult> CreateModel(string cityName, WeatherModel weatherModel);
+        Task<IResult> CreateWetherModelAsync(WeatherModel weatherModel);
 
         Task<IResult> UpdateWeatherModelAsync(WeatherModel updateWeatherModel, WeatherModel existingWeatherModel);
 
