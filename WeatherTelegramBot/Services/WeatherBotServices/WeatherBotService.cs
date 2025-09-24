@@ -1,6 +1,8 @@
 ﻿
 using AutoMapper;
+using WeatherTelegramBot.Data;
 using WeatherTelegramBot.Services.TelegramBotServices;
+using WeatherTelegramBot.Services.WeatherEndpointsServices;
 using WeatherTelegramBot.Services.WeatherServies;
 
 namespace WeatherTelegramBot.Services.WeatherTelegramServices
@@ -9,10 +11,12 @@ namespace WeatherTelegramBot.Services.WeatherTelegramServices
     {
         private IWeatherService _weatherService;
         private readonly IMapper _mapper;
-        public WeatherBotService(IWeatherService weatherService, IMapper mapper)
+        private readonly IWeatherRepo _weatherRepo;
+        public WeatherBotService(IWeatherService weatherService, IMapper mapper,IWeatherRepo weatherRepo)
         {
             _weatherService = weatherService;
             _mapper = mapper;
+            _weatherRepo = weatherRepo;
         }
         public async Task<string> GetWeatherMesageAsync(string cityName)
         {
@@ -21,6 +25,7 @@ namespace WeatherTelegramBot.Services.WeatherTelegramServices
                 var weatherData = await _weatherService.GetWeatherAsync(cityName, _mapper);
                 if (weatherData == null)
                     return $"❌ Не удалось получить данные для города '{cityName}'";
+                WeatherEndpoints.CreateWeatherFromOpenWeather(cityName, _weatherService, _mapper, _weatherRepo);
 
                 return $"🌤️ Погода в {weatherData.City}:\n\n" +
                        $"🌡️ Температура: {weatherData.Temperature}K\n" +
