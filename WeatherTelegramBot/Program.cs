@@ -71,11 +71,7 @@ namespace WeatherTelegramBot
 
             // Запускаем сервис и ждем завершения приложения
             var botTask = botService.StartAsync(app.Services.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping);
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var botService = scope.ServiceProvider.GetRequiredService<TelegramBotbackGroundService>();
-            //    _ = Task.Run(() => botService.StartAsync(default)); // Если есть свой метод запуска
-            //}
+            
 
             app.Run();
         }
