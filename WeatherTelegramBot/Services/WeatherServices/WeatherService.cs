@@ -3,7 +3,7 @@ using System.Text.Json;
 using WeatherTelegramBot.DTOs;
 using WeatherTelegramBot.Models;
 
-namespace WeatherTelegramBot.Services
+namespace WeatherTelegramBot.Services.WeatherServies
 {
     public class WeatherService : IWeatherService
     {
@@ -33,6 +33,7 @@ namespace WeatherTelegramBot.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error getting weather for {cityName}: {ex.Message}");
                 return null;
 
 

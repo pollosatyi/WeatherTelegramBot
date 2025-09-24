@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using WeatherTelegramBot.Models;
 
-namespace WeatherTelegramBot.Services
+namespace WeatherTelegramBot.Services.WeatherServies
 {
     public interface IWeatherService
     {
