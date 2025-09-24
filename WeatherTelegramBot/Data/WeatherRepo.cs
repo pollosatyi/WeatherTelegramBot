@@ -31,7 +31,7 @@ namespace WeatherTelegramBot.Data
                  _context.SaveChanges();
                 return Results.Ok();
             }
-            return Results.NotFound($"Такого города {cityName} нет в базе");
+            return Results.NotFound($"Такого города {char.ToUpper(cityName[0])+cityName.Substring(1)} нет в базе");
         }
 
         public async Task<WeatherModel?> GetWeatherModelAsync(string cityName)

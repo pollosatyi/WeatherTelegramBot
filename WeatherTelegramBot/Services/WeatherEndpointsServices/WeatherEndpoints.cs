@@ -12,9 +12,15 @@ namespace WeatherTelegramBot.Services.WeatherEndpointsServices
         {
             var groupFromOpenWeather = app.MapGroup("api/v1/weatherFromOpenWeatherMap");
 
-            groupFromOpenWeather.MapGet("/get/{city.ToLower}", GetWeatherFromOpenWeather);
-            groupFromOpenWeather.MapPost("/post/{city.ToLower}", CreateWeatherFromOpenWeather);
+            groupFromOpenWeather.MapGet("/get/{city}", GetWeatherFromOpenWeather);
+            groupFromOpenWeather.MapPost("/post/{city}", CreateWeatherFromOpenWeather);
+            groupFromOpenWeather.MapDelete("/delete/{city}", DeleteWeatherFromOpenWeather);
 
+        }
+
+        private static async Task<IResult> DeleteWeatherFromOpenWeather(string cityName, IWeatherRepo weatherRepo)
+        {
+            return await weatherRepo.DeleteWeatherModelAsync(cityName.ToLower());
         }
 
         private static async Task<IResult> CreateWeatherFromOpenWeather(string cityName,
@@ -24,22 +30,22 @@ namespace WeatherTelegramBot.Services.WeatherEndpointsServices
         {
             try
             {
-                var weatherModel = await weatherService.GetWeatherAsync(cityName, mapper);
+                var weatherModel = await weatherService.GetWeatherAsync(cityName.ToLower(), mapper);
 
                 if (weatherModel == null) return Results.NotFound($"Погода для города '{cityName}' не найдена");
 
-                var findCityFromDb = await weatherRepo.GetWeatherModelAsync(cityName);
-                if(findCityFromDb == null)
+                var findCityFromDb = await weatherRepo.GetWeatherModelAsync(cityName.ToLower());
+                if (findCityFromDb == null)
                 {
                     await weatherRepo.CreateWetherModelAsync(weatherModel);
                 }
                 else
                 {
-                    await weatherRepo.UpdateWeatherModelAsync(weatherModel,findCityFromDb);
+                    await weatherRepo.UpdateWeatherModelAsync(weatherModel, findCityFromDb);
                 }
 
-                
-             
+
+
                 return Results.Ok(mapper.Map<ReadModelDto>(weatherModel));
 
             }
@@ -52,17 +58,13 @@ namespace WeatherTelegramBot.Services.WeatherEndpointsServices
 
         }
 
-        //private static async Task<ReadModelDto?> GetCityFromDb(string cityName, IWeatherRepo weatherRepo)
-        //{
-        //    var weatherModel = await weatherRepo.GetWeatherModelAsync(cityName);
 
-        //}
 
         private static async Task<IResult> GetWeatherFromOpenWeather(string cityName, IWeatherService weatherService, IMapper mapper)
         {
             try
             {
-                var weatherModel = await weatherService.GetWeatherAsync(cityName, mapper);
+                var weatherModel = await weatherService.GetWeatherAsync(cityName.ToLower(), mapper);
 
                 if (weatherModel == null) return Results.NotFound($"Погода для города '{cityName}' не найдена");
 
