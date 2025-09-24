@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using WeatherTelegramBot.DTOs;
 using WeatherTelegramBot.Models;
-using static WeatherTelegramBot.DTOs.CreateWeatherDto;
+using static WeatherTelegramBot.DTOs.CreateModelDto;
 
 
 namespace WeatherTelegramBot.Profiles
@@ -12,12 +12,20 @@ namespace WeatherTelegramBot.Profiles
         {
 
             //Маппинг из сложного WeatherDto в простую WeatherModel
-            CreateMap<CreateWeatherDto, WeatherModel>()
+            CreateMap<CreateModelDto, WeatherModel>()
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Temperature, opt => opt.MapFrom(src => src.Main.Temp))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Weather.First().Description))
-                .ForMember(dest => dest.WindSpeed, opt => opt.MapFrom(src => src.Wind.Speed));
+                .ForMember(dest => dest.WindSpeed, opt => opt.MapFrom(src => src.Wind.Speed))
+                .ForMember(dest => dest.RequestCount, opt => opt.MapFrom(_ => 1))
+                .ForMember(dest => dest.AverageTemperature, opt => opt.MapFrom(src => src.Main.Temp));
 
+            CreateMap<WeatherModel, ReadModelDto>()
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+                .ForMember(dest => dest.Temperature, opt => opt.MapFrom(src => src.Temperature))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.WindSpeed, opt => opt.MapFrom(src => src.WindSpeed));
+               
 
 
 

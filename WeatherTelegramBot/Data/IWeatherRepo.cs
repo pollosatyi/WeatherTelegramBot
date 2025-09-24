@@ -1,16 +1,17 @@
-﻿using WeatherTelegramBot.Models;
+﻿using WeatherTelegramBot.DTOs;
+using WeatherTelegramBot.Models;
 
 namespace WeatherTelegramBot.Data
 {
     public interface IWeatherRepo
     {
         Task SaveChanges();
-        Task GetWeatherAsync(int id);
+        Task<WeatherModel?> GetWeatherModelAsync(string cityName);
 
-        Task CreateCityWetherAsync(WeatherModel weatherModel);
+        Task CreateWetherModelAsync(WeatherModel weatherModel);
 
-        Task UpdateCityWeatherAsync(WeatherModel weatherModel, int id);
+        Task<IResult> UpdateWeatherModelAsync(WeatherModel updateWeatherModel, WeatherModel existingWeatherModel);
 
-        Task DeleteCityWeatherAsync(int id);
+        Task DeleteWeatherModelAsync(string cityName);
     }
 }

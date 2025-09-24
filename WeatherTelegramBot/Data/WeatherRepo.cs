@@ -1,32 +1,69 @@
-﻿using WeatherTelegramBot.Models;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using WeatherTelegramBot.DTOs;
+using WeatherTelegramBot.Models;
 
 namespace WeatherTelegramBot.Data
 {
     public class WeatherRepo : IWeatherRepo
     {
-        public Task CreateCityWetherAsync(WeatherModel weatherModel)
+        private AppDbContext _context;
+        private readonly IMapper _mapper;
+
+        public WeatherRepo(AppDbContext dbContext, IMapper mapper)
+        {
+            _context = dbContext;
+            _mapper = mapper;
+        }
+        public async Task CreateWetherModelAsync(WeatherModel weatherModel)
+        {
+            await _context.WeatherModels.AddAsync(weatherModel);
+            await SaveChanges();
+
+        }
+
+        public Task DeleteWeatherModelAsync(string cityName)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteCityWeatherAsync(int id)
+        public async Task<WeatherModel?> GetWeatherModelAsync(string cityName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var weatherModel = await _context.WeatherModels.FirstOrDefaultAsync(x => x.City == cityName);
+                return weatherModel;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+
+            }
         }
 
-        public Task GetWeatherAsync(int id)
+        public async Task SaveChanges()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
+
         }
 
-        public Task SaveChanges()
+        public async Task<IResult> UpdateWeatherModelAsync(WeatherModel updateModel, WeatherModel existingModel)
         {
-            throw new NotImplementedException();
+            existingModel.Temperature = updateModel.Temperature;
+            existingModel.Description = updateModel.Description;
+            existingModel.WindSpeed = updateModel.WindSpeed;
+            existingModel.RequestCount++;
+            double newAverangeTemperature = await AverangeTemperature(existingModel.Temperature, updateModel.Temperature, existingModel.RequestCount);
+            existingModel.AverageTemperature = newAverangeTemperature;
+            await _context.SaveChangesAsync();
+            return Results.Ok(_mapper.Map<ReadModelDto>(existingModel));
+
         }
 
-        public Task UpdateCityWeatherAsync(WeatherModel weatherModel, int id)
+        private Task<double> AverangeTemperature(double temperatureExists, double temperatureUpdate, int requestCount)
         {
-            throw new NotImplementedException();
+            var averange = Math.Round((temperatureExists * (requestCount - 1) + temperatureUpdate) / requestCount, 2);
+            return Task.FromResult(averange);
         }
     }
 }

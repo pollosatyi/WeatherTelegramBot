@@ -7,11 +7,11 @@ namespace WeatherTelegramBot.Services.WeatherTelegramServices
 {
     public class WeatherBotService : IWeatherBotService
     {
-       private IWeatherService _weatherService;
+        private IWeatherService _weatherService;
         private readonly IMapper _mapper;
         public WeatherBotService(IWeatherService weatherService, IMapper mapper)
         {
-            _weatherService=weatherService;
+            _weatherService = weatherService;
             _mapper = mapper;
         }
         public async Task<string> GetWeatherMesageAsync(string cityName)
