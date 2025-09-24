@@ -22,9 +22,16 @@ namespace WeatherTelegramBot.Data
 
         }
 
-        public Task DeleteWeatherModelAsync(string cityName)
+        public async Task<IResult> DeleteWeatherModelAsync(string cityName)
         {
-            throw new NotImplementedException();
+            var weatherModel = await GetWeatherModelAsync( cityName);
+            if (weatherModel != null)
+            {
+                 _context.WeatherModels.Remove(weatherModel);
+                 _context.SaveChanges();
+                return Results.Ok();
+            }
+            return Results.NotFound($"Такого города {cityName} нет в базе");
         }
 
         public async Task<WeatherModel?> GetWeatherModelAsync(string cityName)
@@ -49,15 +56,22 @@ namespace WeatherTelegramBot.Data
 
         public async Task<IResult> UpdateWeatherModelAsync(WeatherModel updateModel, WeatherModel existingModel)
         {
-            existingModel.Temperature = updateModel.Temperature;
-            existingModel.Description = updateModel.Description;
-            existingModel.WindSpeed = updateModel.WindSpeed;
-            existingModel.RequestCount++;
-            double newAverangeTemperature = await AverangeTemperature(existingModel.Temperature, updateModel.Temperature, existingModel.RequestCount);
-            existingModel.AverageTemperature = newAverangeTemperature;
-            await _context.SaveChangesAsync();
-            return Results.Ok(_mapper.Map<ReadModelDto>(existingModel));
+            try
+            {
+                existingModel.Temperature = updateModel.Temperature;
+                existingModel.Description = updateModel.Description;
+                existingModel.WindSpeed = updateModel.WindSpeed;
+                existingModel.RequestCount++;
+                double newAverangeTemperature = await AverangeTemperature(existingModel.Temperature, updateModel.Temperature, existingModel.RequestCount);
+                existingModel.AverageTemperature = newAverangeTemperature;
+                await _context.SaveChangesAsync();
+                return Results.Ok(_mapper.Map<ReadModelDto>(existingModel));
+            }
+            catch (Exception ex)
+            {
+                return Results.Problem(ex.Message);
 
+            }
         }
 
         private Task<double> AverangeTemperature(double temperatureExists, double temperatureUpdate, int requestCount)

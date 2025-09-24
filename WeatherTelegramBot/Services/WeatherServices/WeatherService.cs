@@ -24,6 +24,7 @@ namespace WeatherTelegramBot.Services.WeatherServies
                 var json = await response.Content.ReadAsStringAsync();
                 var weatherDataDto = JsonSerializer.Deserialize<CreateModelDto>(json, new JsonSerializerOptions
                 {
+                   
                     PropertyNameCaseInsensitive = true
                 });
 

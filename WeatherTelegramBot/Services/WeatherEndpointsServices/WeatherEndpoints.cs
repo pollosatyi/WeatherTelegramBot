@@ -12,8 +12,8 @@ namespace WeatherTelegramBot.Services.WeatherEndpointsServices
         {
             var groupFromOpenWeather = app.MapGroup("api/v1/weatherFromOpenWeatherMap");
 
-            groupFromOpenWeather.MapGet("/get/{city}", GetWeatherFromOpenWeather);
-            groupFromOpenWeather.MapPost("/post/{city}", CreateWeatherFromOpenWeather);
+            groupFromOpenWeather.MapGet("/get/{city.ToLower}", GetWeatherFromOpenWeather);
+            groupFromOpenWeather.MapPost("/post/{city.ToLower}", CreateWeatherFromOpenWeather);
 
         }
 
@@ -40,7 +40,7 @@ namespace WeatherTelegramBot.Services.WeatherEndpointsServices
 
                 
              
-                return Results.Ok(weatherModel);
+                return Results.Ok(mapper.Map<ReadModelDto>(weatherModel));
 
             }
             catch (Exception ex)

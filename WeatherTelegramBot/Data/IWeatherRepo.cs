@@ -12,6 +12,6 @@ namespace WeatherTelegramBot.Data
 
         Task<IResult> UpdateWeatherModelAsync(WeatherModel updateWeatherModel, WeatherModel existingWeatherModel);
 
-        Task DeleteWeatherModelAsync(string cityName);
+        Task<IResult> DeleteWeatherModelAsync(string cityName);
     }
 }
