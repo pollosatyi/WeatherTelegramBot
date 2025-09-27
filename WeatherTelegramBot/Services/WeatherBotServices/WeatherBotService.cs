@@ -12,7 +12,7 @@ namespace WeatherTelegramBot.Services.WeatherTelegramServices
         private IWeatherService _weatherService;
         private readonly IMapper _mapper;
         private readonly IWeatherRepo _weatherRepo;
-        public WeatherBotService(IWeatherService weatherService, IMapper mapper,IWeatherRepo weatherRepo)
+        public WeatherBotService(IWeatherService weatherService, IMapper mapper, IWeatherRepo weatherRepo)
         {
             _weatherService = weatherService;
             _mapper = mapper;

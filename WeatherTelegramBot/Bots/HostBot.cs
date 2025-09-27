@@ -9,13 +9,13 @@ namespace WeatherTelegramBot.Bots
         public event Action<ITelegramBotClient, Update> OnMessage;
         private TelegramBotClient _bot;
         private long _chatId;
-       
+
         public HostBot(string token, long chatId)
         {
 
             _bot = new TelegramBotClient(token);
             _chatId = chatId;
-           
+
         }
 
         public void Start()
@@ -48,12 +48,12 @@ namespace WeatherTelegramBot.Bots
             await Task.CompletedTask;
         }
 
-        public async Task  SendFirstMessage()
+        public async Task SendFirstMessage()
         {
-            
-               await Task.Delay(100);
-               await _bot.SendTextMessageAsync(_chatId, "Бот готов к работе.\n Введите название города:\n");
-            
+
+            await Task.Delay(100);
+            await _bot.SendTextMessageAsync(_chatId, "Бот готов к работе.\n Введите название города:\n");
+
 
         }
     }

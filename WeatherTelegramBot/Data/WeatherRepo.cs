@@ -24,14 +24,14 @@ namespace WeatherTelegramBot.Data
 
         public async Task<IResult> DeleteWeatherModelAsync(string cityName)
         {
-            var weatherModel = await GetWeatherModelAsync( cityName.ToLower());
+            var weatherModel = await GetWeatherModelAsync(cityName.ToLower());
             if (weatherModel != null)
             {
-                 _context.WeatherModels.Remove(weatherModel);
-                 _context.SaveChanges();
+                _context.WeatherModels.Remove(weatherModel);
+                _context.SaveChanges();
                 return Results.Ok();
             }
-            return Results.NotFound($"Такого города {char.ToUpper(cityName[0])+cityName.Substring(1)} нет в базе");
+            return Results.NotFound($"Такого города {char.ToUpper(cityName[0]) + cityName.Substring(1)} нет в базе");
         }
 
         public async Task<WeatherModel?> GetWeatherModelAsync(string cityName)

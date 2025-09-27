@@ -21,11 +21,11 @@ namespace WeatherTelegramBot.Profiles
                 .ForMember(dest => dest.AverageTemperature, opt => opt.MapFrom(src => src.Main.Temp));
 
             CreateMap<WeatherModel, ReadModelDto>()
-                .ForMember(dest => dest.City, opt => opt.MapFrom(src => char.ToUpper(src.City[0])+src.City.Substring(1)))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => char.ToUpper(src.City[0]) + src.City.Substring(1)))
                 .ForMember(dest => dest.Temperature, opt => opt.MapFrom(src => src.Temperature))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.WindSpeed, opt => opt.MapFrom(src => src.WindSpeed));
-               
+
 
 
 
